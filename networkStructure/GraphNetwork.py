@@ -1,14 +1,20 @@
 """
     图网络结构
 """
+import numpy as np
+
 
 class GraphNetwork(object):
 
-    def __init__(self, size):
-        self.size = size
-        self.graph = self.select_graph(0)
+    def __init__(self, args, size):
+        self.args = args                   # 参数
+        self.size = size                   # 节点数
+        self.degree = np.zeros(self.size)  # 节点度数
+        self.graph = self.select_graph()   # 无向图
+        self.matrix = self.generate_adjacency_matrix()  # 邻接矩阵
 
-    def select_graph(graphid):
+
+    def select_graph(self):
         # 预定义的基础网络拓扑结构
         # 可以通过扩展列表来添加更多内容
         Graphs = [
@@ -74,5 +80,19 @@ class GraphNetwork(object):
 
         ]
 
-        return Graphs[graphid]
+        return Graphs[self.args.graphid]
 
+    def generate_adjacency_matrix(self):
+
+        # 生成该无向图的邻接矩阵
+        matrix = np.full((self.size, self.size), -1, dtype=int)
+
+        for graph in self.graph:
+            for edge in graph:
+                node1, node2 = edge[0], edge[1]
+                matrix[node1][node2] = 1
+                matrix[node2][node1] = 1
+                self.degree[node1] += 1
+                self.degree[node2] += 1
+
+        return matrix

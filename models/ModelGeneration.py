@@ -8,10 +8,10 @@ import torchvision.models as models
 
 class ModelGeneration(object):
 
-
-    def __init__(self, args, size):
+    def __init__(self, args, size, num_class):
         self.args = args
         self.size = size
+        self.num_class = num_class
 
     def getting_models(self):
         models = []
@@ -31,7 +31,7 @@ class ModelGeneration(object):
                 model = MLP.MNIST_MLP(47)
 
         # 分发给节点的模型列表
-        for i in self.size:
+        for i in range(self.size):
             models.append(model)
 
         return models

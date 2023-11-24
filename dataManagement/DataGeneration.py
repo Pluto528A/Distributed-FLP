@@ -31,13 +31,13 @@ class DataPartitioner(object):
         rng = Random()
         rng.seed(seed)
         data_len = len(data)
-        indexes = [x for x in range(0, data_len)]  ## 数据的索引
-        rng.shuffle(indexes)  ## 会随机化数据索引的顺序
+        indexes = [x for x in range(0, data_len)]  # 数据的索引
+        rng.shuffle(indexes)  # 会随机化数据索引的顺序
 
-        ## 将数据集随机均分为同等大小
+        # 将数据集随机均分为同等大小
         for frac in sizes:
             part_len = int(frac * data_len)
-            self.partitions.append(indexes[0:part_len])  ## 按照数据的索引随机均分打乱
+            self.partitions.append(indexes[0:part_len])  # 按照数据的索引随机均分打乱
             indexes = indexes[part_len:]
 
     def use(self, partition):
@@ -59,12 +59,12 @@ class DataGeneration(object):
 
         if self.args.dataset == 'cifar10':
             transform_train = transforms.Compose([
-                transforms.RandomCrop(32, padding=4),  ## 随机裁剪
-                transforms.RandomHorizontalFlip(),  ## 随机水平翻转
-                transforms.ToTensor(),  ## 图像转换为张量
-                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),  ## 对图像进行标准化
+                transforms.RandomCrop(32, padding=4),  # 随机裁剪
+                transforms.RandomHorizontalFlip(),  # 随机水平翻转
+                transforms.ToTensor(),  # 图像转换为张量
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),  # 对图像进行标准化
             ])
-            
+
             trainset = torchvision.datasets.CIFAR10(root=self.args.datasetRoot,
                                                     train=True,
                                                     download=True,
@@ -74,8 +74,7 @@ class DataGeneration(object):
 
             # 随机打乱数据集的索引
             partition = DataPartitioner(trainset, partition_sizes)
-            
-            
+
             """
                 测试数据集
             """
@@ -83,24 +82,23 @@ class DataGeneration(object):
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
             ])
-            
+
             testset = torchvision.datasets.CIFAR10(root=self.args.datasetRoot,
                                                    train=False,
                                                    download=True,
-                                                  transform=transform_test)
+                                                   transform=transform_test)
             # 根据索引获得数据   ？？？
-            for i in self.size:
-                partition = partition.use(i)
-                train_loader = torch.utils.data.DataLoader(partition,
-                                                            batch_size=self.args.bs,
-                                                            shuffle=True,
-                                                            pin_memory=False)
+            for i in range(self.size):
+                partitions = partition.use(i)
+                train_loader = torch.utils.data.DataLoader(partitions,
+                                                           batch_size=self.args.bs,
+                                                           shuffle=True,
+                                                           pin_memory=False)
                 train_loaders.append(train_loader)
-                
+
                 test_loader = torch.utils.data.DataLoader(testset,
-                                                            batch_size=64,
-                                                            shuffle=False,
-                                                            num_workers=self.size)
+                                                          batch_size=64,
+                                                          shuffle=False)
                 test_loaders.append(test_loader)
 
         return train_loaders, test_loaders

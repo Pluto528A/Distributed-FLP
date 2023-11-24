@@ -1,16 +1,16 @@
 
 from utils import ParametersInit
-from networkStructure import GraphNetwork, GraphProcessor, Communicator
-from dataManagement import DataGeneration
-from models import ModelGeneration
-from simulationTraining import Simulation
+from networkStructure.GraphNetwork import GraphNetwork
+from dataManagement.DataGeneration import DataGeneration
+from models.ModelGeneration import ModelGeneration
+from simulationTraining.Simulation import Simulation
 
 if __name__ == '__main__':
     # 参数设置
     args = ParametersInit.para_init()
 
     # 分布式网络图结构  节点个数：8
-    graphNetwork = GraphNetwork(8)
+    graphNetwork = GraphNetwork(args, 8)
 
     # # 对图结构预处理
     # GP = GraphProcessor(graph)
@@ -23,8 +23,8 @@ if __name__ == '__main__':
     train_loaders, test_loaders = dataGeneration.partition_dataset()
 
     # 加载模型列表
-    modelGeneration = ModelGeneration(args, graphNetwork.size)
-    models = modelGeneration
+    modelGeneration = ModelGeneration(args, graphNetwork.size, 10)
+    models = modelGeneration.getting_models()
 
     # 训练
     simulator = Simulation(args, graphNetwork, train_loaders, test_loaders, models)
