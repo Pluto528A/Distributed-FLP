@@ -1,9 +1,9 @@
 
 from utils import ParametersInit
-from networkStructure.GraphNetwork import GraphNetwork
-from dataManagement.DataGeneration import DataGeneration
+from network_structure.GraphNetwork import GraphNetwork
+from data_management.DataGeneration import DataGeneration
 from models.ModelGeneration import ModelGeneration
-from simulationTraining.Simulation import Simulation
+from simulation_training.Simulation import Simulation
 
 if __name__ == '__main__':
     # 参数设置

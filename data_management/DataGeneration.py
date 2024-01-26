@@ -69,36 +69,38 @@ class DataGeneration(object):
                                                     train=True,
                                                     download=True,
                                                     transform=transform_train)
-
-            partition_sizes = [1.0 / self.size for _ in range(self.size)]  # 每个元素都是 1.0 / size
-
-            # 随机打乱数据集的索引
-            partition = DataPartitioner(trainset, partition_sizes)
-
             """
-                测试数据集
+                    测试数据集
             """
             transform_test = transforms.Compose([
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
             ])
-
             testset = torchvision.datasets.CIFAR10(root=self.args.datasetRoot,
                                                    train=False,
                                                    download=True,
                                                    transform=transform_test)
-            # 根据索引获得数据   ？？？
+
+            partition_sizes = [1.0 / self.size for _ in range(self.size)]  # 每个元素都是 1.0 / size
+
+            # 随机打乱数据集的索引
+            train_partitions = DataPartitioner(trainset, partition_sizes)
+            test_partitions = DataPartitioner(testset, partition_sizes)
+
+            # 根据索引获得训练数据
             for i in range(self.size):
-                partitions = partition.use(i)
-                train_loader = torch.utils.data.DataLoader(partitions,
+                train_partition = train_partitions.use(i)
+                train_loader = torch.utils.data.DataLoader(train_partition,
                                                            batch_size=self.args.bs,
                                                            shuffle=True,
                                                            pin_memory=False)
                 train_loaders.append(train_loader)
 
-                test_loader = torch.utils.data.DataLoader(testset,
-                                                          batch_size=64,
-                                                          shuffle=False)
+                test_partition = test_partitions.use(i)
+                test_loader = torch.utils.data.DataLoader(test_partition,
+                                                          batch_size=self.args.bs,
+                                                          shuffle=True,
+                                                          pin_memory=False)
                 test_loaders.append(test_loader)
 
         return train_loaders, test_loaders

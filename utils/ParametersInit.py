@@ -32,13 +32,13 @@ def para_init():
         ],
         default="cifar10",
     )"""
-    parser.add_argument('--name', default="MATCHA", type=str, help='experiment name')
-    parser.add_argument('--description', default="MATCHA", type=str, help='experiment description')
+    parser.add_argument('--name', default="DecenSGD_CIFAR10", type=str, help='experiment name')
+    parser.add_argument('--description', default="DecenSGD_CIFAR10", type=str, help='experiment description')
 
     parser.add_argument('--model', default="res", type=str, help='model name: res/VGG/wrn')
     parser.add_argument('--lr', default=0.8, type=float, help='learning rate')
     parser.add_argument('--momentum', default=0.0, type=float, help='momentum')
-    parser.add_argument('--epoch', '-e', default=100, type=int, help='total epoch')
+    parser.add_argument('--epoch', '-e', default=300, type=int, help='total epoch')
     parser.add_argument('--bs', default=64, type=int, help='batch size on each worker')
     parser.add_argument('--warmup', default=True, action='store_true', help='use lr warmup or not')
     parser.add_argument('--nesterov', default=False, action='store_true', help='use nesterov momentum or not')

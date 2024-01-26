@@ -83,7 +83,7 @@ def test(model, test_loader):
         # inputs, targets = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True)
         outputs = model(inputs)
         acc1 = comp_accuracy(outputs, targets)
-        top1.update(acc1[0], inputs.size(0))
+        top1.update(acc1[0].item(), inputs.size(0))
         # if batch_idx % 10 == 0:
         #     print(
         #         f"第 {batch_idx} 次的 acc 为 ：{top1.avg} - {top1.val} - {top1.count} - {top1.sum}")

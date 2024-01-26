@@ -1,2 +1,4 @@
-/dataset
-/venv
+/dataset/
+/venv/
+/saveModel_DecenSGD_CIFAR10_res/
+/test.py/
